@@ -1,0 +1,41 @@
+{
+  "realm": "${KEYCLOAK_REALM_NAME}",
+  "enabled": true,
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": false,
+  "rememberMe": true,
+  "verifyEmail": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": true,
+    "requiredActions": [
+    {
+      "alias": "delete_account",
+      "name": "Delete Account",
+      "providerId": "delete_account",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 60,
+      "config": {}
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "${KEYCLOAK_CLIENT_ID}",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "redirectUris": [
+        "${KEYCLOAK_REDIRECT_URI}"
+      ],
+      "publicClient": false,
+      "secret": "${KEYCLOAK_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "webOrigins": ["*"],
+      "attributes": {
+        "post.logout.redirect.uris": "${KEYCLOAK_LOGOUT_REDIRECT_URI}"
+      }
+    }
+  ]
+}

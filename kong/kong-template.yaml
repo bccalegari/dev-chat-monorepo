@@ -1,0 +1,19 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: hello-service
+    url: http://http-echo:5678
+    routes:
+      - name: hello-route
+        paths:
+          - /hello
+
+    plugins:
+      - name: dev-chat-kong-keycloak-jwt-verify
+        config:
+          jwks_url: ${KONG_JWKS_URL}
+          client_id: ${KONG_CLIENT_ID}
+          issuer: ${KONG_ISSUER}
+          jwks_cache_ttl: ${KONG_JWKS_CACHE_TTL}
+          pem_cache_ttl: ${KONG_PEM_CACHE_TTL}

@@ -1,0 +1,43 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3
+    ports:
+      - "8080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KEYCLOAK_IMPORT: /opt/keycloak/data/import/realm-export.json
+    command: ["start-dev", "--import-realm"]
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    networks:
+      - dev-chat-network
+
+  kong:
+    build:
+      context: kong
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong-config.yaml
+      KONG_PLUGINS: bundled,dev-chat-kong-keycloak-jwt-verify
+    volumes:
+      - ./kong/kong-config.yaml:/etc/kong/kong-config.yaml
+      - ./kong/plugins/dev-chat-kong-keycloak-jwt-verify:/usr/local/share/lua/5.1/kong/plugins/dev-chat-kong-keycloak-jwt-verify
+    networks:
+      - dev-chat-network
+
+  http-echo:
+    image: hashicorp/http-echo
+    command: ["-text={\"message\": \"Hello World!\"}"]
+    ports:
+      - "5678:5678"
+    networks:
+      -  dev-chat-network
+
+networks:
+  dev-chat-network:
+    driver: bridge
