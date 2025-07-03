@@ -1,3 +1,7 @@
 [submodule "dev-chat-kong-keycloak-jwt-verify"]
 	path = kong/plugins/dev-chat-kong-keycloak-jwt-verify
 	url = https://github.com/bccalegari/dev-chat-kong-keycloak-jwt-verify.git
+
+[submodule "dev-chat-webapp"]
+	path = dev-chat-webapp
+	url = https://github.com/bccalegari/dev-chat-webapp.git

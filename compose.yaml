@@ -1,6 +1,7 @@
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.3
+    container_name: keycloak
     ports:
       - "8080:8080"
     environment:
@@ -12,10 +13,31 @@ services:
       - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     networks:
       - dev-chat-network
-
+ 
+  webapp:
+    build:
+      context: ./dev-chat-webapp
+      dockerfile: Dockerfile.dev
+    container_name: webapp
+    volumes:
+      - ./dev-chat-webapp:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    networks:
+      - dev-chat-network
+    develop:
+      watch:
+        - action: restart
+          path: ./dev-chat-webapp
+          target: /app
+          ignore:
+            - node_modules/
+            
   kong:
     build:
       context: kong
+    container_name: kong
     ports:
       - "8000:8000"
       - "8443:8443"
@@ -32,6 +54,7 @@ services:
 
   http-echo:
     image: hashicorp/http-echo
+    container_name: http-echo
     command: ["-text={\"message\": \"Hello World!\"}"]
     ports:
       - "5678:5678"
