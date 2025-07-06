@@ -1,3 +1,4 @@
 */realm-export.json
 */kong-config.yaml
+kafka-connect/connectors/*connector.json
 .env

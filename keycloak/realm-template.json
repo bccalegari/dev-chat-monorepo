@@ -37,5 +37,9 @@
         "post.logout.redirect.uris": "${KEYCLOAK_LOGOUT_REDIRECT_URI}"
       }
     }
+  ],
+  "eventsEnabled": true,
+  "eventsListeners": [
+    "jboss-logging"
   ]
 }
