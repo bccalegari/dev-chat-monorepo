@@ -1,4 +1,4 @@
-.PHONY: all realm kong connectors create-connectors help
+.PHONY: all realm kong connectors create-connectors create-schemas help
 
 SCRIPTS := generate-realm.sh generate-kong-config.sh
 
@@ -34,6 +34,13 @@ create-connectors:
 	@cd ./kafka-connect && ./create-connectors.sh
 	@echo "Kafka Connect connectors created."
 
+create-schemas:
+	@echo "Ensuring create-schemas.sh is executable..."
+	@chmod +x ./kafka-schema-registry/create-schemas.sh
+	@echo "Creating schemas in Kafka Schema Registry..."
+	@cd ./kafka-schema-registry && ./create-schemas.sh
+	@echo "Schemas created in Kafka Schema Registry."
+
 help:
 	@echo "Usage:"
 	@echo "  make            		: Build all configuration files (Realm JSON, Kong YAML and Kafka Connect connectors)"
@@ -41,4 +48,5 @@ help:
 	@echo "  make kong     	 		: Generate the Kong API Gateway YAML configuration file"
 	@echo "  make connectors 	    : Generate Kafka Connect connectors for Keycloak"
 	@echo "  make create-connectors : Create Kafka Connect connectors using the generated configurations"
+	@echo "  make create-schemas    : Create schemas in Kafka Schema Registry"
 	@echo "  make help       		: Display this help information"

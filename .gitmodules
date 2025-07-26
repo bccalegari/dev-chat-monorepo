@@ -5,3 +5,7 @@
 [submodule "dev-chat-webapp"]
 	path = dev-chat-webapp
 	url = https://github.com/bccalegari/dev-chat-webapp.git
+
+[submodule "dev-chat-user-service"]
+	path = dev-chat-user-service
+	url = git@github.com:bccalegari/dev-chat-user-service.git

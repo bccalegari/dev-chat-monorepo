@@ -116,7 +116,7 @@ services:
 
   webapp:
     build:
-      context: ./dev-chat-webapp
+      context: dev-chat-webapp
       dockerfile: Dockerfile.dev
     container_name: webapp
     volumes:
@@ -124,6 +124,37 @@ services:
       - /app/node_modules
     ports:
       - "3000:3000"
+    networks:
+      - dev-chat-network
+
+  user-service:
+    build: 
+      context: dev-chat-user-service
+      dockerfile: Dockerfile.dev
+    container_name: user-service
+    depends_on:
+      - keycloak
+      - kafka
+      - neo4j
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./dev-chat-user-service:/app
+      - /app/node_modules
+    networks:
+      - dev-chat-network
+
+  neo4j:
+    image: neo4j:5.26
+    container_name: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
+      NEO4J_PLUGINS: '["apoc"]'
+    volumes:
+      - neo4j_data:/data
     networks:
       - dev-chat-network
 
@@ -135,4 +166,6 @@ volumes:
   keycloak-postgres-data:
     driver: local
   kafka-data:
+    driver: local
+  neo4j_data:
     driver: local
