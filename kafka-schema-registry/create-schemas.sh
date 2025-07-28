@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCHEMA_REGISTRY_URL="http://localhost:8081"
+SCHEMA_REGISTRY_URL="kafka-schema-registry.devchat.localhost"
 SCHEMAS_DIR="./schemas"
 
 echo "Starting schema registration in Schema Registry..."

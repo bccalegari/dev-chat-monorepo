@@ -1,4 +1,26 @@
 services:
+  envoy:
+    image: envoyproxy/envoy:v1.35.0
+    container_name: envoy
+    ports:
+      - "80:80"
+      - "9092:9092"
+      - "5432:5432"
+      - "7687:7687"
+    volumes:
+      - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml:ro
+    networks:
+      - dev-chat-network
+    depends_on:
+      - keycloak
+      - keycloak-postgres
+      - kong
+      - webapp
+      - kafka
+      - kafka-schema-registry
+      - kafka-connect
+      - neo4j
+
   keycloak:
     image: quay.io/keycloak/keycloak:26.3
     container_name: keycloak
@@ -14,8 +36,6 @@ services:
       KEYCLOAK_IMPORT: /opt/keycloak/data/import/realm-export.json
     volumes:
       - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
-    ports:
-      - "8080:8080"
     command: ["start-dev", "--import-realm"]
     networks:
       - dev-chat-network
@@ -30,8 +50,6 @@ services:
     command: ["postgres", "-c", "wal_level=logical", "-c", "max_replication_slots=4", "-c", "max_wal_senders=4"]
     volumes:
       - keycloak-postgres-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     networks:
       - dev-chat-network
 
@@ -39,10 +57,6 @@ services:
     build:
       context: kong
     container_name: kong
-    ports:
-      - "8000:8000"
-      - "8443:8443"
-      - "8001:8001"
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /etc/kong/kong-config.yaml
@@ -56,8 +70,6 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
-    ports:
-      - "9092:9092"
     environment:
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_NODE_ID: 1
@@ -79,8 +91,6 @@ services:
     container_name: kafka-schema-registry
     depends_on:
       - kafka
-    ports:
-      - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
@@ -95,8 +105,7 @@ services:
     depends_on:
       - kafka
       - kafka-schema-registry
-    ports:
-      - "8083:8083"
+      - keycloak-postgres
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka:9092
       CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
@@ -122,10 +131,10 @@ services:
     volumes:
       - ./dev-chat-webapp:/app
       - /app/node_modules
-    ports:
-      - "3000:3000"
     networks:
       - dev-chat-network
+    extra_hosts:
+      - "auth.devchat.localhost:host-gateway"
 
   user-service:
     build: 
@@ -136,8 +145,6 @@ services:
       - keycloak
       - kafka
       - neo4j
-    ports:
-      - "3001:3001"
     volumes:
       - ./dev-chat-user-service:/app
       - /app/node_modules
@@ -147,9 +154,6 @@ services:
   neo4j:
     image: neo4j:5.26
     container_name: neo4j
-    ports:
-      - "7474:7474"
-      - "7687:7687"
     environment:
       NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
       NEO4J_PLUGINS: '["apoc"]'

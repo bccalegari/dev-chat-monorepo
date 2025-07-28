@@ -1,0 +1,213 @@
+static_resources:
+  listeners:
+  - name: listener_http
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 80
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: ingress_http
+          route_config:
+            name: local_route
+            virtual_hosts:
+            - name: keycloak
+              domains: ["auth.devchat.localhost"]
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: keycloak_service
+
+            - name: kong
+              domains: ["api.devchat.localhost"]
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: kong_service
+
+            - name: webapp
+              domains: ["devchat.localhost"]
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: webapp_service
+
+            - name: kafka_schema_registry
+              domains: ["kafka-schema-registry.devchat.localhost"]
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: kafka_schema_registry_service
+
+            - name: kafka_connect
+              domains: ["kafka-connect.devchat.localhost"]
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: kafka_connect_service
+          http_filters:
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          upgrade_configs:
+            - upgrade_type: websocket
+
+  - name: listener_kafka
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 9092
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.tcp_proxy
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
+          stat_prefix: kafka_tcp
+          cluster: kafka_service
+
+  - name: listener_keycloak_postgres
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 5432
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.tcp_proxy
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
+          stat_prefix: postgres_tcp
+          cluster: keycloak_postgres_service
+
+  - name: listener_neo4j
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 7687
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.tcp_proxy
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
+          stat_prefix: neo4j_bolt_tcp
+          cluster: neo4j_service
+
+  clusters:
+  - name: keycloak_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: keycloak_service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: keycloak
+                port_value: 8080
+
+  - name: kong_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: kong_service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: kong
+                port_value: 8000
+
+  - name: webapp_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: webapp_service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: webapp
+                port_value: 3000
+
+  - name: kafka_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: kafka_service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: kafka
+                port_value: 9092
+
+  - name: kafka_schema_registry_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: kafka_schema_registry_service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: kafka-schema-registry
+                port_value: 8081
+
+  - name: kafka_connect_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: kafka_connect_service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: kafka-connect
+                port_value: 8083
+
+  - name: keycloak_postgres_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: keycloak_postgres_service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: keycloak-postgres
+                port_value: 5432
+
+  - name: neo4j_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: neo4j_service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: neo4j
+                port_value: 7687

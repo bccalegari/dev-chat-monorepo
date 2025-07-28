@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONNECT_URL="http://localhost:8083/connectors"
+CONNECT_URL="http://kafka-connect.devchat.localhost/connectors"
 CONNECTORS_DIR="./connectors"
 
 echo "Starting Kafka Connect connectors creation..."

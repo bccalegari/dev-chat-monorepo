@@ -1,0 +1,5 @@
+127.0.0.1 auth.devchat.localhost
+127.0.0.1 api.devchat.localhost
+127.0.0.1 devchat.localhost
+127.0.0.1 kafka-schema-registry.devchat.localhost
+127.0.0.1 kafka-connect.devchat.localhost
