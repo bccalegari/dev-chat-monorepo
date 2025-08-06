@@ -1,6 +1,4 @@
-.PHONY: all realm kong connectors create-connectors create-schemas help
-
-SCRIPTS := generate-realm.sh generate-kong-config.sh
+.PHONY: all realm kong connectors create-connectors create-schemas set-replica-identity help
 
 all: realm kong connectors
 	@echo "All configuration files generated successfully!"
@@ -41,12 +39,20 @@ create-schemas:
 	@cd ./kafka-schema-registry && ./create-schemas.sh
 	@echo "Schemas created in Kafka Schema Registry."
 
+set-replica-identity:
+	@echo "Ensuring set-replica-identity.sh is executable..."
+	@chmod +x ./keycloak/set-replica-identity.sh
+	@echo "Setting REPLICA IDENTITY FULL on Keycloak table..."
+	@cd ./keycloak && ./set-replica-identity.sh
+	@echo "REPLICA IDENTITY FULL set on Keycloak table."
+
 help:
 	@echo "Usage:"
-	@echo "  make            		: Build all configuration files (Realm JSON, Kong YAML and Kafka Connect connectors)"
-	@echo "  make realm      		: Generate the Keycloak Realm JSON configuration file"
-	@echo "  make kong     	 		: Generate the Kong API Gateway YAML configuration file"
-	@echo "  make connectors 	    : Generate Kafka Connect connectors for Keycloak"
-	@echo "  make create-connectors : Create Kafka Connect connectors using the generated configurations"
-	@echo "  make create-schemas    : Create schemas in Kafka Schema Registry"
-	@echo "  make help       		: Display this help information"
+	@echo "  make            		   : Build all configuration files (Realm JSON, Kong YAML and Kafka Connect connectors)"
+	@echo "  make realm      		   : Generate the Keycloak Realm JSON configuration file"
+	@echo "  make kong     	 		   : Generate the Kong API Gateway YAML configuration file"
+	@echo "  make connectors 	       : Generate Kafka Connect connectors for Keycloak"
+	@echo "  make create-connectors    : Create Kafka Connect connectors using the generated configurations"
+	@echo "  make create-schemas       : Create schemas in Kafka Schema Registry"
+	@echo "  make set-replica-identity : Set REPLICA IDENTITY FULL on Keycloak table"
+	@echo "  make help       		   : Display this help information"

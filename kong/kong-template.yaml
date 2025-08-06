@@ -2,12 +2,16 @@ _format_version: "3.0"
 _transform: true
 
 services:
-  - name: hello-service
-    url: http://http-echo:5678
+  - name: user-service
+    url: http://user-service:3001
     routes:
-      - name: hello-route
+      - name: graphql
         paths:
-          - /hello
+          - /user-service
+        methods:
+          - POST
+          - GET
+        strip_path: true
 
     plugins:
       - name: dev-chat-kong-keycloak-jwt-verify

@@ -5,6 +5,7 @@
     { "name": "originalKey", "type": ["null", "string"], "default": null },
     { "name": "originalValue", "type": ["null", "string"], "default": null },
     { "name": "originalHeaders", "type": ["null", { "type": "map", "values": "string" }], "default": null },
+    { "name": "traceId", "type": ["null", "string"], "default": null },
     { "name": "errorMessage", "type": "string" },
     { "name": "errorStack", "type": ["null", "string"], "default": null },
     { "name": "topic", "type": "string" },
