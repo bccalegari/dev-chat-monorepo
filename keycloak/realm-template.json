@@ -1,5 +1,7 @@
 {
   "realm": "${KEYCLOAK_REALM_NAME}",
+  "displayName": "${KEYCLOAK_REALM_DISPLAY_NAME}",
+  "displayNameHtml": "${KEYCLOAK_REALM_DISPLAY_NAME}",
   "enabled": true,
 
   "registrationAllowed": true,
@@ -94,18 +96,19 @@
   "clients": [
     {
       "clientId": "${KEYCLOAK_CLIENT_ID}",
+      "name": "${KEYCLOAK_CLIENT_NAME}",
       "enabled": true,
       "protocol": "openid-connect",
       "redirectUris": [
         "${KEYCLOAK_REDIRECT_URI}"
       ],
-      "publicClient": false,
-      "secret": "${KEYCLOAK_CLIENT_SECRET}",
+      "publicClient": true,
       "standardFlowEnabled": true,
-      "directAccessGrantsEnabled": true,
+      "directAccessGrantsEnabled": false,
       "webOrigins": ["*"],
       "attributes": {
-        "post.logout.redirect.uris": "${KEYCLOAK_LOGOUT_REDIRECT_URI}"
+        "post.logout.redirect.uris": "${KEYCLOAK_LOGOUT_REDIRECT_URI}",
+        "pkce.code.challenge.method": "S256"
       }
     }
   ],
