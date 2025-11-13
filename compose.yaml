@@ -2,6 +2,7 @@ services:
   envoy:
     image: envoyproxy/envoy:v1.35.0
     container_name: envoy
+    restart: always
     ports:
       - "80:80"
       - "9092:9092"
@@ -24,6 +25,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.3
     container_name: keycloak
+    restart: always
     depends_on:
       - keycloak-postgres
     environment:
@@ -43,6 +45,7 @@ services:
   keycloak-postgres:
     image: postgres:17
     container_name: keycloak-postgres
+    restart: always
     environment:
       POSTGRES_USER: ${KEYCLOAK_DB_USERNAME}
       POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
@@ -57,6 +60,7 @@ services:
     build:
       context: kong
     container_name: kong
+    restart: always
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /etc/kong/kong-config.yaml
@@ -70,6 +74,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
+    restart: always
     environment:
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_NODE_ID: 1
@@ -89,6 +94,7 @@ services:
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:7.4.10
     container_name: kafka-schema-registry
+    restart: always
     depends_on:
       - kafka
     environment:
@@ -102,6 +108,7 @@ services:
     build:
       context: kafka-connect
     container_name: kafka-connect
+    restart: always
     depends_on:
       - kafka
       - kafka-schema-registry
@@ -125,11 +132,12 @@ services:
 
   webapp:
     build:
-      context: dev-chat-webapp
+      context: "C:/Users/bruno/dyad-apps/dev-chat-webapp-RELEASE"
       dockerfile: Dockerfile.dev
     container_name: webapp
+    restart: always
     volumes:
-      - ./dev-chat-webapp:/app
+      - "C:/Users/bruno/dyad-apps/dev-chat-webapp-RELEASE:/app"
       - /app/node_modules
     networks:
       - dev-chat-network
@@ -141,6 +149,7 @@ services:
       context: dev-chat-user-service
       dockerfile: Dockerfile.dev
     container_name: user-service
+    restart: always
     depends_on:
       - keycloak
       - kafka
@@ -154,6 +163,7 @@ services:
   neo4j:
     image: neo4j:5.26
     container_name: neo4j
+    restart: always
     environment:
       NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
       NEO4J_PLUGINS: '["apoc"]'
