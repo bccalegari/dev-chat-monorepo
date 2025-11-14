@@ -30,13 +30,13 @@ static_resources:
                 route:
                   cluster: kong_service
 
-            - name: webapp
-              domains: ["devchat.localhost"]
+            - name: support-gateway
+              domains: ["spg.devchat.localhost"]
               routes:
               - match:
                   prefix: "/"
                 route:
-                  cluster: webapp_service
+                  cluster: support-gateway_service
 
             - name: kafka_schema_registry
               domains: ["kafka-schema-registry.devchat.localhost"]
@@ -128,18 +128,18 @@ static_resources:
                 address: kong
                 port_value: 8000
 
-  - name: webapp_service
+  - name: support-gateway_service
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: round_robin
     load_assignment:
-      cluster_name: webapp_service
+      cluster_name: support-gateway_service
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: webapp
+                address: support-gateway
                 port_value: 3000
 
   - name: kafka_service

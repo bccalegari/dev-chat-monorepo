@@ -1,10 +1,10 @@
 [submodule "dev-chat-kong-keycloak-jwt-verify"]
 	path = kong/plugins/dev-chat-kong-keycloak-jwt-verify
-	url = https://github.com/bccalegari/dev-chat-kong-keycloak-jwt-verify.git
+	url = git@github.com:bccalegari/dev-chat-kong-keycloak-jwt-verify.git
 
-[submodule "dev-chat-webapp"]
-	path = dev-chat-webapp
-	url = https://github.com/bccalegari/dev-chat-webapp.git
+[submodule "dev-chat-support-gateway"]
+	path = dev-chat-support-gateway
+	url = git@github.com:bccalegari/dev-chat-support-gateway.git
 
 [submodule "dev-chat-user-service"]
 	path = dev-chat-user-service

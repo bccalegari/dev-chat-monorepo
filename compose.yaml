@@ -16,7 +16,7 @@ services:
       - keycloak
       - keycloak-postgres
       - kong
-      - webapp
+      - support-gateway
       - kafka
       - kafka-schema-registry
       - kafka-connect
@@ -130,14 +130,14 @@ services:
     networks:
       - dev-chat-network
 
-  webapp:
+  support-gateway:
     build:
-      context: "C:/Users/bruno/dyad-apps/dev-chat-webapp-RELEASE"
+      context: support-gateway
       dockerfile: Dockerfile.dev
-    container_name: webapp
+    container_name: support-gateway
     restart: always
     volumes:
-      - "C:/Users/bruno/dyad-apps/dev-chat-webapp-RELEASE:/app"
+      - "./support-gateway:/app"
       - /app/node_modules
     networks:
       - dev-chat-network

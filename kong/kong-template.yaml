@@ -21,16 +21,3 @@ services:
           issuer: ${KONG_ISSUER}
           jwks_cache_ttl: ${KONG_JWKS_CACHE_TTL}
           pem_cache_ttl: ${KONG_PEM_CACHE_TTL}
-
-      - name: cors
-        service: user-service
-        config:
-          origins:
-            - http://devchat.localhost
-          methods:
-            - POST
-            - OPTIONS
-          headers:
-            - Authorization
-            - Content-Type
-          credentials: true

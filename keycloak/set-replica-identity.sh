@@ -17,7 +17,7 @@ TABLE_NAME="public.user_entity"
 echo "Setting REPLICA IDENTITY FULL on table $TABLE_NAME..."
 
 PGPASSWORD="$KEYCLOAK_DB_PASSWORD" psql \
-  -h  devchat.localhost \
+  -h  auth.devchat.localhost \
   -p 5432 \
   -U "$KEYCLOAK_DB_USERNAME" \
   -d "$KEYCLOAK_DB_PASSWORD" \
