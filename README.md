@@ -80,14 +80,17 @@ The User Service uses a Neo4j graph database to store and manage user profiles a
 * Supports efficient queries for recommendations, social suggestions, and network analysis.  
 * Simplifies the management of connected data, making it easier to scale social features as the application grows.
 
-## WebApp (Frontend)
+## Support Gateway
 
-The WebApp is a client application built with React, Vite, and Tailwind CSS. It was developed using [Dyad](https://www.dyad.sh), a local open-source AI app builder, primarily to handle the visual and interactive aspects of the interface.
+The Support Gateway is a lightweight Vite-based application created to support authentication workflows during development.
+Since a full frontend is not the focus of this project, this gateway provides a simple interface to interact with Keycloak for OAuth2/OIDC operations.
 
-* Authenticates users via Keycloak using OAuth2/OpenID Connect.  
-* Receives JWT access tokens from Keycloak and stores them securely in memory.  
-* Sends requests to backend APIs through Kong, including the JWT in the `Authorization` header for authentication.  
-* Fetches, updates, and manages user profile data through the User Service GraphQL API.  
+* Allows users to log in and register through Keycloak.
+* Exposes user information such as User ID and parsed profile details.
+* Retrieves and displays Access and Refresh tokens directly from Keycloak.
+* Generates ready-to-use Authorization: Bearer <token> headers for backend testing.
+
+Serves as a convenient utility for obtaining tokens to test secured backend APIs via Postman, Insomnia, or curl.
 
 # Setup Instructions
 
@@ -120,7 +123,7 @@ Add the following lines:
 ```
 127.0.0.1 auth.devchat.localhost
 127.0.0.1 api.devchat.localhost
-127.0.0.1 devchat.localhost
+127.0.0.1 spg.devchat.localhost
 127.0.0.1 kafka-schema-registry.devchat.localhost
 127.0.0.1 kafka-connect.devchat.localhost
 ```
