@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "dev-chat-collection",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

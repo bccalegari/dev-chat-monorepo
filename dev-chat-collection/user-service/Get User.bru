@@ -1,0 +1,29 @@
+meta {
+  name: Get User
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{user-service-url}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query {
+    getUser(id: "{{user-id}}") {
+      id
+      email
+      name
+      createdAt
+      updatedAt
+    }
+  }
+      
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

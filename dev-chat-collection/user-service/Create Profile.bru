@@ -1,0 +1,41 @@
+meta {
+  name: Create Profile
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{user-service-url}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation {
+    createProfile(createProfileDto: {
+      userId: "{{user-id}}"
+      username: "your-username"
+      birthDate: "AAAA-MM-DD"
+      bio: "Your bio"
+    }) {
+      id
+      username
+      birthDate
+      bio
+      userId
+      createdAt
+      updatedAt
+      deletedAt
+    }
+  }
+      
+}
+
+script:post-response {
+  bru.setEnvVar("profile-id", res.body.data.createProfile.id)
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

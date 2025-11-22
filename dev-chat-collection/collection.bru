@@ -1,0 +1,69 @@
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: your-bearer-token
+}
+
+vars:pre-request {
+  user-service-url: http://api.devchat.localhost/user-service
+}
+
+docs {
+  # DevChat – Setup Guide
+  
+  Follow the steps below to correctly configure your local DevChat environment inside bruno.
+  
+  ---
+  
+  ## 1. Access the Local Auth Portal
+  Open:
+  
+  **http://spg.devchat.localhost**
+  
+  This page displays your **User ID** and **Access Token**.
+  
+  ---
+  
+  ## 2. Configure Environment Variables
+  Open the environment:
+  
+  **dev-chat-environment → Configure**
+  
+  Set:
+  
+  - **user-id** → copy the value shown on `http://spg.devchat.localhost`
+  - **profile-id** → leave blank (it will be filled automatically after creating a profile)
+  
+  ---
+  
+  ## 3. Add Your Access Token
+  In bruno:
+  
+  1. Go to the **Auth** section  
+  2. Select **Bearer Token**  
+  3. Paste the **Access Token** from `http://spg.devchat.localhost` into the **Token** field
+  
+  This token is required for authenticated requests.
+  
+  ---
+  
+  ## 4. Create a Profile
+  Send the **create-profile** request.
+  
+  On success:
+  
+  - The newly created **profile-id** is automatically written into the environment variable `{{profile-id}}`.
+  
+  You can now use `{{profile-id}}` in other requests.
+  
+  ---
+  
+  ## 5. When Your Token Expires
+  If any request returns `401 Unauthorized`:
+  
+  1. Re-open **http://spg.devchat.localhost**
+  2. Copy the new **Access Token**
+  3. Update the token in Postman under **Auth → Bearer Token**
+}

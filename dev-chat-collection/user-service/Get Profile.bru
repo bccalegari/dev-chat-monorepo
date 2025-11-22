@@ -1,0 +1,32 @@
+meta {
+  name: Get Profile
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{user-service-url}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query {
+    getProfile(userId: "{{user-id}}") {
+      id
+      username
+      birthDate
+      bio
+      userId
+      createdAt
+      updatedAt
+      deletedAt
+    }
+  }
+      
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

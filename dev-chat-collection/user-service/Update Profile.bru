@@ -1,0 +1,37 @@
+meta {
+  name: Update Profile
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{user-service-url}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation {
+    updateProfile(updateProfileDto: {
+      id: "{{profile-id}}"
+      username: "your-username"
+      birthDate: "AAAA-MM-DD"
+      bio: "Your bio"
+    }) {
+      id
+      username
+      birthDate
+      bio
+      userId
+      createdAt
+      updatedAt
+      deletedAt
+    }
+  }
+      
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
