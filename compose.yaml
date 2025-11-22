@@ -132,12 +132,12 @@ services:
 
   support-gateway:
     build:
-      context: support-gateway
+      context: dev-chat-support-gateway
       dockerfile: Dockerfile.dev
     container_name: support-gateway
     restart: always
     volumes:
-      - "./support-gateway:/app"
+      - "./dev-chat-support-gateway:/app"
       - /app/node_modules
     networks:
       - dev-chat-network
